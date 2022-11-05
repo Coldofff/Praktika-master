@@ -1,0 +1,386 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Хранилище PaymentDBModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="analyzes">
+          <Key>
+            <PropertyRef Name="PK_analysis_id" />
+          </Key>
+          <Property Name="PK_analysis_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="date" Type="date" Nullable="false" />
+          <Property Name="added_count" Type="int" Nullable="false" />
+          <Property Name="deleted_count" Type="int" Nullable="false" />
+          <Property Name="changed_count" Type="int" Nullable="false" />
+          <Property Name="FK_user_id" Type="int" />
+        </EntityType>
+        <EntityType Name="categories">
+          <Key>
+            <PropertyRef Name="PK_category_id" />
+          </Key>
+          <Property Name="PK_category_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="category_name" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="payments">
+          <Key>
+            <PropertyRef Name="PK_payment_id" />
+          </Key>
+          <Property Name="PK_payment_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="payment_key" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="price" Type="money" Nullable="false" />
+          <Property Name="count" Type="int" Nullable="false" />
+          <Property Name="sum" Type="money" Nullable="false" />
+          <Property Name="FK_product_id" Type="int" Nullable="false" />
+          <Property Name="FK_user_id" Type="int" Nullable="false" />
+          <Property Name="date" Type="date" Nullable="false" />
+          <Property Name="purpose" Type="nvarchar" MaxLength="50" />
+          <Property Name="check" Type="nvarchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="products">
+          <Key>
+            <PropertyRef Name="PK_product_id" />
+          </Key>
+          <Property Name="PK_product_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="product_name" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="FK_category_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="users">
+          <Key>
+            <PropertyRef Name="PK_users_id" />
+          </Key>
+          <Property Name="PK_users_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="family_name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="first_name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="patronymic" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="login" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="password" Type="nvarchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_analyzes_users">
+          <End Role="users" Type="Self.users" Multiplicity="0..1" />
+          <End Role="analyzes" Type="Self.analyzes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="users">
+              <PropertyRef Name="PK_users_id" />
+            </Principal>
+            <Dependent Role="analyzes">
+              <PropertyRef Name="FK_user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_products_categories">
+          <End Role="categories" Type="Self.categories" Multiplicity="1" />
+          <End Role="products" Type="Self.products" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="categories">
+              <PropertyRef Name="PK_category_id" />
+            </Principal>
+            <Dependent Role="products">
+              <PropertyRef Name="FK_category_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_products_users_products">
+          <End Role="products" Type="Self.products" Multiplicity="1" />
+          <End Role="payments" Type="Self.payments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="products">
+              <PropertyRef Name="PK_product_id" />
+            </Principal>
+            <Dependent Role="payments">
+              <PropertyRef Name="FK_product_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_products_users_users">
+          <End Role="users" Type="Self.users" Multiplicity="1" />
+          <End Role="payments" Type="Self.payments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="users">
+              <PropertyRef Name="PK_users_id" />
+            </Principal>
+            <Dependent Role="payments">
+              <PropertyRef Name="FK_user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Хранилище PaymentDBModelContainer">
+          <EntitySet Name="analyzes" EntityType="Self.analyzes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="categories" EntityType="Self.categories" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="payments" EntityType="Self.payments" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="products" EntityType="Self.products" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="users" EntityType="Self.users" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_analyzes_users" Association="Self.FK_analyzes_users">
+            <End Role="users" EntitySet="users" />
+            <End Role="analyzes" EntitySet="analyzes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_products_categories" Association="Self.FK_products_categories">
+            <End Role="categories" EntitySet="categories" />
+            <End Role="products" EntitySet="products" />
+          </AssociationSet>
+          <AssociationSet Name="FK_products_users_products" Association="Self.FK_products_users_products">
+            <End Role="products" EntitySet="products" />
+            <End Role="payments" EntitySet="payments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_products_users_users" Association="Self.FK_products_users_users">
+            <End Role="users" EntitySet="users" />
+            <End Role="payments" EntitySet="payments" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="PaymentDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="analyzes">
+          <Key>
+            <PropertyRef Name="PK_analysis_id" />
+          </Key>
+          <Property Name="PK_analysis_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="added_count" Type="Int32" Nullable="false" />
+          <Property Name="deleted_count" Type="Int32" Nullable="false" />
+          <Property Name="changed_count" Type="Int32" Nullable="false" />
+          <Property Name="FK_user_id" Type="Int32" />
+          <NavigationProperty Name="users" Relationship="Self.FK_analyzes_users" FromRole="analyzes" ToRole="users" />
+        </EntityType>
+        <EntityType Name="categories">
+          <Key>
+            <PropertyRef Name="PK_category_id" />
+          </Key>
+          <Property Name="PK_category_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="category_name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="products" Relationship="Self.FK_products_categories" FromRole="categories" ToRole="products" />
+        </EntityType>
+        <EntityType Name="payments">
+          <Key>
+            <PropertyRef Name="PK_payment_id" />
+          </Key>
+          <Property Name="PK_payment_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="payment_key" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="price" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+          <Property Name="count" Type="Int32" Nullable="false" />
+          <Property Name="sum" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+          <Property Name="FK_product_id" Type="Int32" Nullable="false" />
+          <Property Name="FK_user_id" Type="Int32" Nullable="false" />
+          <Property Name="date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="purpose" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="check" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="products" Relationship="Self.FK_products_users_products" FromRole="payments" ToRole="products" />
+          <NavigationProperty Name="users" Relationship="Self.FK_products_users_users" FromRole="payments" ToRole="users" />
+        </EntityType>
+        <EntityType Name="products">
+          <Key>
+            <PropertyRef Name="PK_product_id" />
+          </Key>
+          <Property Name="PK_product_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="product_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="FK_category_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="categories" Relationship="Self.FK_products_categories" FromRole="products" ToRole="categories" />
+          <NavigationProperty Name="payments" Relationship="Self.FK_products_users_products" FromRole="products" ToRole="payments" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="users">
+          <Key>
+            <PropertyRef Name="PK_users_id" />
+          </Key>
+          <Property Name="PK_users_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="family_name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="first_name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="patronymic" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="login" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="password" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="analyzes" Relationship="Self.FK_analyzes_users" FromRole="users" ToRole="analyzes" />
+          <NavigationProperty Name="payments" Relationship="Self.FK_products_users_users" FromRole="users" ToRole="payments" />
+        </EntityType>
+        <Association Name="FK_analyzes_users">
+          <End Role="users" Type="Self.users" Multiplicity="0..1" />
+          <End Role="analyzes" Type="Self.analyzes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="users">
+              <PropertyRef Name="PK_users_id" />
+            </Principal>
+            <Dependent Role="analyzes">
+              <PropertyRef Name="FK_user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_products_categories">
+          <End Role="categories" Type="Self.categories" Multiplicity="1" />
+          <End Role="products" Type="Self.products" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="categories">
+              <PropertyRef Name="PK_category_id" />
+            </Principal>
+            <Dependent Role="products">
+              <PropertyRef Name="FK_category_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_products_users_products">
+          <End Role="products" Type="Self.products" Multiplicity="1" />
+          <End Role="payments" Type="Self.payments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="products">
+              <PropertyRef Name="PK_product_id" />
+            </Principal>
+            <Dependent Role="payments">
+              <PropertyRef Name="FK_product_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_products_users_users">
+          <End Role="users" Type="Self.users" Multiplicity="1" />
+          <End Role="payments" Type="Self.payments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="users">
+              <PropertyRef Name="PK_users_id" />
+            </Principal>
+            <Dependent Role="payments">
+              <PropertyRef Name="FK_user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="PaymentDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="analyzes" EntityType="Self.analyzes" />
+          <EntitySet Name="categories" EntityType="Self.categories" />
+          <EntitySet Name="payments" EntityType="Self.payments" />
+          <EntitySet Name="products" EntityType="Self.products" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+          <EntitySet Name="users" EntityType="Self.users" />
+          <AssociationSet Name="FK_analyzes_users" Association="Self.FK_analyzes_users">
+            <End Role="users" EntitySet="users" />
+            <End Role="analyzes" EntitySet="analyzes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_products_categories" Association="Self.FK_products_categories">
+            <End Role="categories" EntitySet="categories" />
+            <End Role="products" EntitySet="products" />
+          </AssociationSet>
+          <AssociationSet Name="FK_products_users_products" Association="Self.FK_products_users_products">
+            <End Role="products" EntitySet="products" />
+            <End Role="payments" EntitySet="payments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_products_users_users" Association="Self.FK_products_users_users">
+            <End Role="users" EntitySet="users" />
+            <End Role="payments" EntitySet="payments" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Хранилище PaymentDBModelContainer" CdmEntityContainer="PaymentDBEntities">
+          <EntitySetMapping Name="analyzes">
+            <EntityTypeMapping TypeName="PaymentDBModel.analyzes">
+              <MappingFragment StoreEntitySet="analyzes">
+                <ScalarProperty Name="PK_analysis_id" ColumnName="PK_analysis_id" />
+                <ScalarProperty Name="date" ColumnName="date" />
+                <ScalarProperty Name="added_count" ColumnName="added_count" />
+                <ScalarProperty Name="deleted_count" ColumnName="deleted_count" />
+                <ScalarProperty Name="changed_count" ColumnName="changed_count" />
+                <ScalarProperty Name="FK_user_id" ColumnName="FK_user_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="categories">
+            <EntityTypeMapping TypeName="PaymentDBModel.categories">
+              <MappingFragment StoreEntitySet="categories">
+                <ScalarProperty Name="PK_category_id" ColumnName="PK_category_id" />
+                <ScalarProperty Name="category_name" ColumnName="category_name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="payments">
+            <EntityTypeMapping TypeName="PaymentDBModel.payments">
+              <MappingFragment StoreEntitySet="payments">
+                <ScalarProperty Name="PK_payment_id" ColumnName="PK_payment_id" />
+                <ScalarProperty Name="payment_key" ColumnName="payment_key" />
+                <ScalarProperty Name="price" ColumnName="price" />
+                <ScalarProperty Name="count" ColumnName="count" />
+                <ScalarProperty Name="sum" ColumnName="sum" />
+                <ScalarProperty Name="FK_product_id" ColumnName="FK_product_id" />
+                <ScalarProperty Name="FK_user_id" ColumnName="FK_user_id" />
+                <ScalarProperty Name="date" ColumnName="date" />
+                <ScalarProperty Name="purpose" ColumnName="purpose" />
+                <ScalarProperty Name="check" ColumnName="check" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="products">
+            <EntityTypeMapping TypeName="PaymentDBModel.products">
+              <MappingFragment StoreEntitySet="products">
+                <ScalarProperty Name="PK_product_id" ColumnName="PK_product_id" />
+                <ScalarProperty Name="product_name" ColumnName="product_name" />
+                <ScalarProperty Name="FK_category_id" ColumnName="FK_category_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="PaymentDBModel.sysdiagrams">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="users">
+            <EntityTypeMapping TypeName="PaymentDBModel.users">
+              <MappingFragment StoreEntitySet="users">
+                <ScalarProperty Name="PK_users_id" ColumnName="PK_users_id" />
+                <ScalarProperty Name="family_name" ColumnName="family_name" />
+                <ScalarProperty Name="first_name" ColumnName="first_name" />
+                <ScalarProperty Name="patronymic" ColumnName="patronymic" />
+                <ScalarProperty Name="login" ColumnName="login" />
+                <ScalarProperty Name="password" ColumnName="password" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
